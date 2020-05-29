@@ -43,6 +43,7 @@
 #include "video.h"
 #include "window.h"
 #include "joystick.h"
+#include "image.h"
 
 #ifdef COMPILE_DL_SDL
 ZEND_GET_MODULE(sdl)
@@ -97,6 +98,7 @@ PHP_MINIT_FUNCTION(sdl)
 		&& SUCCESS == PHP_MINIT_CALL(sdl_video)
 		&& SUCCESS == PHP_MINIT_CALL(sdl_window)
 		&& SUCCESS == PHP_MINIT_CALL(sdl_joystick)
+		&& SUCCESS == PHP_MINIT_CALL(sdl_image)
 		) {
 		return SUCCESS;
 	}
@@ -457,6 +459,8 @@ static zend_function_entry sdl_functions[] = {
 	ZEND_FE(SDL_WriteBE64,                    arginfo_SDL_write)
 #endif
 
+    // SDL_image
+    ZEND_FE(IMG_LoadTexture,					arginfo_IMG_LoadTexture)
 
 	ZEND_FE_END
 };

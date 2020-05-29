@@ -52,8 +52,23 @@ if test "$PHP_SDL" != "no"; then
     AC_MSG_ERROR(Cannot find sdl2-config)
   fi
 
-  PHP_SUBST(SDL_SHARED_LIBADD)
   AC_DEFINE(HAVE_SDL2, 1, [ ])
+
+  AC_MSG_CHECKING(for SDL2_Image library)
+  SDL2_IMAGE=sdl2_image
+  SDL2_IMAGE_SYMBOL=IMG_LoadTexture
+
+  dnl SDL2_IMAGE_LIBS="pkg-config --libs sdl2_image"
+  SDL2_IMAGE_LIBS="-lSDL2_image"
+
+  PHP_CHECK_LIBRARY($SDL2_IMAGE,$SDL2_IMAGE_SYMBOL,
+  [
+    SDL_SHARED_LIBADD="$SDL_SHARED_LIBADD $SDL2_IMAGE_LIBS"
+  ],[
+    AC_MSG_ERROR([wrong lib$SDL2_IMAGE version or library not found])
+  ])
+
+  PHP_SUBST(SDL_SHARED_LIBADD)
 
   SDL_SOURCE_FILES="`find src -name "*.c"`"
   PHP_NEW_EXTENSION(sdl, $SDL_SOURCE_FILES, $ext_shared,, $PHP_SDL_CFLAGS)
