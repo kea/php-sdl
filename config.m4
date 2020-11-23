@@ -1,10 +1,11 @@
 dnl config.m4 for the PHP SDL extension
 
-PHP_ARG_WITH(sdl, whether to enable SDL functions,
-[  --with-sdl[=SDLCONFIG_PATH]         Enable SDL support])
+PHP_ARG_ENABLE([sdl],
+  [whether to enable SDL functions],
+  [AS_HELP_STRING([--enable-sdl], [Enable SDL support])])
 
 PHP_ARG_ENABLE(sdl-debug, whether to enable PHP-SDL debug support,
-[  --enable-sdl-debug     Enable SDL debug support], no, no)
+  [--enable-sdl-debug     Enable SDL debug support], no, no)
 
 if test "$PHP_SDL" != "no"; then
   export OLD_CPPFLAGS="$CPPFLAGS"
@@ -36,7 +37,7 @@ if test "$PHP_SDL" != "no"; then
   fi
   dnl }}}
 
-  if test "$PHP_SDL" == "yes"; then
+  if test "$PHP_SDL" != "no"; then
     AC_PATH_PROG(SDL2_CONFIG, sdl2-config, no)
   else
     SDL2_CONFIG="$PHP_SDL"
@@ -54,7 +55,10 @@ if test "$PHP_SDL" != "no"; then
 
   PHP_SUBST(SDL_SHARED_LIBADD)
   AC_DEFINE(HAVE_SDL2, 1, [ ])
+  SDL_SOURCE_FILES="php_sdl.c src/rect.c src/mouse.c src/timer.c src/rwops.c src/video.c src/keyboard.c \
+   src/blendmode.c src/mutex.c src/pixels.c src/render.c src/platform.c src/sdl.c src/power.c src/messagebox.c \
+   src/error.c src/filesystem.c src/event.c src/surface.c src/version.c src/joystick.c src/glcontext.c \
+   src/shape.c src/window.c src/cpuinfo.c"
 
-  SDL_SOURCE_FILES="`find src -name "*.c"`"
   PHP_NEW_EXTENSION(sdl, $SDL_SOURCE_FILES, $ext_shared,, $PHP_SDL_CFLAGS)
 fi
